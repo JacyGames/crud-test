@@ -1,0 +1,47 @@
+﻿@page
+@model HomeModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Age</th>
+                <th scope="col">Sex</th>
+                <th scope="col">Status</th>
+                <th scope="col">Created date</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var userInfo in Model.listUsers)
+            {
+                <tr>
+                    <td>@userInfo.User_name</td>
+                    <td>@userInfo.User_email</td>
+                    <td>@userInfo.User_age</td>
+                    <td>@userInfo.User_sex</td>
+                    @if (userInfo.User_is_engaged) {
+                        <td> Engaged</td>
+                    }else {
+                        <td> Single</td>
+                    }
+                    <td>@userInfo.Created_date</td>
+                    <td><a class="btn btn-primary" href="/EditUser?id=@userInfo.User_id">Edit</a></td>
+                    <td><a class="btn btn-danger" href="/DeleteUser?id=@userInfo.User_id">Delete</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@if (Model.errorMessage.Length > 0)
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.errorMessage
+    </div>
+}

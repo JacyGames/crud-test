@@ -1,0 +1,26 @@
+﻿@page
+@using Microsoft.Data.SqlClient;
+@{
+    try
+    {
+        string connectionString = "Data Source=(localdb)\\local;Initial Catalog=test;Integrated Security=True";
+        string id = Request.Query["id"];
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+
+            string sqlQuery = "DELETE from users_info WHERE user_id=@id";
+            using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                command.ExecuteNonQuery();
+
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
+    Response.Redirect("/Home");
+}

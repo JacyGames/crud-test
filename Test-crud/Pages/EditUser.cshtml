@@ -1,0 +1,83 @@
+﻿@page
+@model Test_crud.Pages.EditUserModel
+@{
+}
+
+<form method="POST" class="container col-md-6">
+    <div class="alert alert-primary" role="alert">
+        Edit User
+    </div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control"
+               placeholder="User name" aria-label="User name"
+               aria-describedby="button-addon2"
+               name="User_name"
+               required
+               value="@Model.userInfo.User_name">
+
+    </div>
+
+    <div class="input-group mb-3">
+        <input type="email" class="form-control"
+               placeholder="User email" aria-label="User email"
+               aria-describedby="button-addon2"
+               name="User_email"
+               required
+               value="@Model.userInfo.User_email">
+
+    </div>
+
+    <div class="input-group mb-3">
+        <input type="number" class="form-control"
+               placeholder="User age" aria-label="User age"
+               required
+               aria-describedby="button-addon2"
+               name="User_age"
+               value="@Model.userInfo.User_age">
+
+    </div>
+
+    <div class="input-group mb-3">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="User_sex" id="inlineRadio1" 
+            value="Male"
+                   checked="@(Model.userInfo.User_sex == "Male")">
+            <label class="form-check-label" for="inlineRadio1">Male</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="User_sex" id="inlineRadio2" 
+            value="Female"
+                   checked="@(Model.userInfo.User_sex == "Female")">
+            <label class="form-check-label" for="inlineRadio2">Female</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="User_sex" id="inlineRadio3"
+            value="Other"
+                   checked="@(Model.userInfo.User_sex == "Other")">
+            <label class="form-check-label" for="inlineRadio3">Other</label>
+        </div>
+
+    </div>
+    <div class="input-group mb-3">
+        <div class="form-check">
+            <input class="form-check-input" name="User_is_engaged"
+            type="checkbox"
+            value="@Model.userInfo.User_is_engaged"
+            checked="@Model.userInfo.User_is_engaged"
+            id="User_is_engaged">
+            <label class="form-check-label" for="User_is_engaged">
+                Engaged
+            </label>
+        </div>
+    </div>
+
+
+    <a class="btn btn-outline-secondary" href="/Home">Cancel</a>
+    <button class="btn btn-outline-primary float-end" type="submit" id="button-addon2">Submit</button>
+</form>
+@if (Model.errorMessage.Length > 0)
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.errorMessage
+    </div>
+}
