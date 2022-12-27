@@ -45,3 +45,31 @@
         @Model.errorMessage
     </div>
 }
+
+@if(Model.rowsCount > 10) {
+    double pagesNum = Math.Ceiling((double)Model.rowsCount / Model.portionSize);
+    <nav>
+        <ul class="pagination">
+            @if (Model.currentPage > 1)
+            {
+                int prevPage = Model.currentPage - 1;
+                <li class="page-item"><a class="page-link" href="/Home?page=@prevPage">Previous</a></li>
+            }
+
+            @for (var i = 1; i <= pagesNum; i++)
+            {
+                if(Model.currentPage == i) {
+                    <li class="page-item active"><a class="page-link" href="/Home?page=@i">@i</a></li>
+                }else {
+                    <li class="page-item"><a class="page-link" href="/Home?page=@i">@i</a></li>
+                }
+               
+            }
+            @if(Model.currentPage < pagesNum) {
+                int nextPage = Model.currentPage + 1;
+                <li class="page-item"><a class="page-link" href="/Home?page=@nextPage">Next</a></li>
+            }
+           
+        </ul>
+    </nav>
+}

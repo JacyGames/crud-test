@@ -1,14 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Test_crud.Pages
 {
     public class HomeModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
+        private string connectionString = "Data Source=(localdb)\\local;Initial Catalog=test;Integrated Security=True";
 
         public List<UserInfo> listUsers = new List<UserInfo>();
         public string errorMessage = "";
+        public int rowsCount = 0;
+        public int portionSize = 10;
+        public int currentPage = 0;
 
         public HomeModel(ILogger<IndexModel> logger)
         {
@@ -18,15 +23,28 @@ namespace Test_crud.Pages
         public void OnGet()
         {
 
-            try {
-                string connectionString = "Data Source=(localdb)\\local;Initial Catalog=test;Integrated Security=True";
+            try
+            {
+                rowsCount = GetRowsCount();
+                if (Request.Query["page"].IsNullOrEmpty())
+                {
+                    currentPage = 1;
+                }
+                else {
+                    currentPage = Int32.Parse(Request.Query["page"]);
+                }
+
+                int offset = currentPage * portionSize - portionSize;
+
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
-                    string sqlQuery = "SELECT * FROM users_info";
+                    string sqlQuery = "SELECT * FROM users_info ORDER BY created_date OFFSET @offset ROWS FETCH NEXT @rows ROWS ONLY";
 
                     using(SqlCommand cmd = new SqlCommand(sqlQuery,connection))
                     {
+                        cmd.Parameters.AddWithValue("@offset", offset);
+                        cmd.Parameters.AddWithValue("rows", portionSize);
                         using(SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while(reader.Read())
@@ -58,7 +76,32 @@ namespace Test_crud.Pages
             }
 
         }
+
+        public int GetRowsCount()
+        {
+            int rowsCount = 0;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                string sqlQuery = "SELECT COUNT(*) FROM users_info";
+
+                using (SqlCommand cmd = new SqlCommand(sqlQuery, connection))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            rowsCount = reader.GetInt32(0);
+                        }
+                    }
+
+                }
+            }
+
+            return rowsCount;
+        }
     }
+
 
     public class UserInfo
     {
